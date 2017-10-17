@@ -49,26 +49,30 @@ int main(int argc, char *argv[], char *envp[])
       trim(line); // remove leading/trailing space
       if (strcmp(line,"exit") == 0) break;
       if (strcmp(line,"") == 0) { printf("mysh$ "); continue; }
-
-//todo
+      char **cmd  =  tokenise(line," ");
+//todo        
+        printf("%d\n",pid);
       pid = fork();//fork a copy of itself
-
-      if (pid == -1) {
+        printf("%d\n",pid);
+      if (pid < 0) {
           perror("fork failed");
           exit(EXIT_FAILURE);
 
       }else if (pid != 0) {
         //parent process: suspend execution until the child has exited
           wait(&stat);
+          freeTokens(cmd);
       } else {
           //printf("%s\n",line);
           //printf("%s\n",line);
           //printf("%s\n",commands);
-          char **cmd  =  tokenise(line," ");
+          
           execute(cmd,path,envp);
+
       }
       printf("mysh$ ");
    }
+   freeTokens(path);
    printf("\n");
    return(EXIT_SUCCESS);
 }
@@ -78,7 +82,7 @@ void execute(char **args, char **path, char **envp)
 {
     char *cmd = NULL;
     //if use the path of the commond directly
-    if (args[0][0] == '/') {
+    if (args[0][0] == '/' || args[0][0] == '.') {
         if (isExecutable(args[0])) {
             cmd = strdup(args[0]);
         }
