@@ -1,0 +1,1 @@
+void findResult(char **, int);
