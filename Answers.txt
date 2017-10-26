@@ -1,0 +1,493 @@
+
+a.The mkwords 1000000 3 command produces 857424 distinct words. What is the maximum chain length if a hash table size of 85711 is used? How does the chain length distribution change if the hash table size is 100000? 214283? 400000? 400837? 857144? 857137?
+
+answers:The maximum chain length of 85711 hash table size is 25 (as output below),The maximum chain length decreased while the hash table size increased by the 2 times rate of growth, also the number of empty slots increased while hash table size increased. 
+
+
+
+output from word:
+
+$ ./mkwords 1000000 3 | ./words - 85711
+
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 85711
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0        2
+       1       45
+       2      183
+       3      657
+       4     1573
+       5     3234
+       6     5340
+       7     7774
+       8     9770
+       9    10580
+      10    10715
+      11     9806
+      12     8233
+      13     6224
+      14     4414
+      15     2956
+      16     1889
+      17     1134
+      18      592
+      19      297
+      20      165
+      21       68
+      22       39
+      23       11
+      24        8
+      25        2
+
+
+$ ./mkwords 1000000 3 | ./words - 100000
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 100000
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0       63
+       1      380
+       2     1339
+       3     3329
+       4     5849
+       5     8645
+       6    11012
+       7    12045
+       8    11808
+       9    10668
+      10     8932
+      11     7141
+      12     5452
+      13     3979
+      14     2871
+      15     1991
+      16     1453
+      17      929
+      18      647
+      19      467
+      20      311
+      21      216
+      22      123
+      23      109
+      24       70
+      25       52
+      26       41
+      27       22
+      28       25
+      29       14
+      30        6
+      31        4
+      32        3
+      33        1
+      35        2
+      36        1
+
+$ ./mkwords 1000000 3 | ./words - 214283
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 214283
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0     3941
+       1    15883
+       2    31412
+       3    41675
+       4    41621
+       5    33589
+       6    22258
+       7    12827
+       8     6437
+       9     2851
+      10     1177
+      11      415
+      12      142
+      13       41
+      14       12
+      15        1
+      16        1
+
+
+
+stu@ubuntu:~/lab/lab (2)$ ./mkwords 1000000 3 | ./words - 400000
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 400000
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0    53644
+       1   101973
+       2   102409
+       3    71093
+       4    39086
+       5    18632
+       6     7798
+       7     3230
+       8     1294
+       9      509
+      10      208
+      11       79
+      12       27
+      13       10
+      14        5
+      15        2
+      16        1
+
+
+
+$ ./mkwords 1000000 3 | ./words - 400837
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 400837
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0    47251
+       1   100881
+       2   107773
+       3    77228
+       4    41365
+       5    17528
+       6     6293
+       7     1845
+       8      546
+       9      101
+      10       24
+      11        1
+      12        1
+
+$ ./mkwords 1000000 3 | ./words - 857137
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 857137
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   315092
+       1   315639
+       2   157414
+       3    52728
+       4    13119
+       5     2655
+       6      419
+       7       62
+       8        7
+       9        2
+
+
+$ ./mkwords 1000000 3 | ./words - 857144
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 857144
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   317687
+       1   312678
+       2   156949
+       3    52670
+       4    13680
+       5     2874
+       6      507
+       7       88
+       8        9
+       9        2
+
+
+
+
+b.Every other number above (i.e. 85711, 214283, 400837, 857137) is prime. It is often noted that using prime numbers appropriately in the hash function leads to a better distribution of hash values, and thus generally shorter chains. Does this appear to be the case for the hash table sizes in the previous question?
+
+
+answer:yes, use non-prime number above and one addition case(i.e. 100000, 214200, 400000, 857144) compare with prime number above (i.e. 85711, 214283, 400837, 857137). since they didn't have too much difference when compare with each other one by one (i.e. 400000 and 400837),we can make comparation though their outputs.And the outputs clearly shows that using prime numbers  in the hash function generated most chains in shorter length, which leads to a better distribution.
+
+
+
+
+
+output from words:
+(see a. for more)
+
+$ ./mkwords 1000000 3 | ./words - 214200
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 214200
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0     5742
+       1    19316
+       2    32978
+       3    40000
+       4    37255
+       5    29524
+       6    20811
+       7    13086
+       8     7583
+       9     3973
+      10     2103
+      11      991
+      12      490
+      13      184
+      14      100
+      15       31
+      16       20
+      17        5
+      18        5
+      19        2
+      22        1
+
+
+
+
+c.An "optimal" hash table would have all slots occupied and have all chains of length roughly (nwords/nslots). In practice, this is impossible to achieve in the general case, and what we want is a table with relatively short chains, with as few slots as possible (small size of hash table), and not too many empty slots. Can you find a suitable hash table size that keeps the maximum chain length under 10, and has most chains with length 1 or 2, but also uses more than 2/3 of the slots?
+
+
+answer:use 857423 words, and set slots with ratio of words to slots at 1:1(=~857423), 1.1:1(=~779473),1.2:1(=~714523), 1.3:1(=~659557), 1.4:1(=~612443), 1.5:1(=~571617).The output below shows that when ratio at 1:1, the uses less than 2/3 of the slots and it is not suitable, at 1:5, the maximum chain length is 10 which is also not suitable, at 1.1:1 ,it has most chains with length 1 or 2. so in this case, the ratio of words to slots at 1.1:1(=~779473) is a suitable hash table size.
+
+
+
+
+stu@ubuntu:~/lab/lab (2)$ ./mkwords 1000000 3 | ./words - 857423
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 857423
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   316061
+       1   314596
+       2   157734
+       3    52513
+       4    13370
+       5     2634
+       6      442
+       7       66
+       8        6
+       9        1
+Testing completed OK
+stu@ubuntu:~/lab/lab (2)$ ./mkwords 1000000 3 | ./words - 779473
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 779473
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   259009
+       1   286057
+       2   157110
+       3    57248
+       4    15795
+       5     3428
+       6      705
+       7      115
+       8        6
+Testing completed OK
+
+stu@ubuntu:~/lab/lab (2)$ ./mkwords 1000000 3 | ./words - 714523
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 714523
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   215952
+       1   257521
+       2   154639
+       3    62021
+       4    18764
+       5     4482
+       6      948
+       7      164
+       8       28
+       9        4
+Testing completed OK
+stu@ubuntu:~/lab/lab (2)$ ./mkwords 1000000 3 | ./words - 659557
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 659557
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   179535
+       1   234063
+       2   151832
+       3    65517
+       4    21640
+       5     5508
+       6     1232
+       7      188
+       8       40
+       9        2
+Testing completed OK
+stu@ubuntu:~/lab/lab (2)$ ./mkwords 1000000 3 | ./words - 612443
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 612443
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   151541
+       1   211325
+       2   147449
+       3    68810
+       4    24364
+       5     6902
+       6     1642
+       7      335
+       8       67
+       9        8
+Testing completed OK
+stu@ubuntu:~/lab/lab (2)$ ./mkwords 1000000 3 | ./words - 571617
+Reading words from stdin
+Hash Table Stats:
+Number of slots = 571617
+Number of items = 857424
+Chain length distribution
+  Length  #Chains
+       0   127820
+       1   191462
+       2   142891
+       3    71779
+       4    26804
+       5     8181
+       6     2141
+       7      450
+       8       77
+       9       10
+      10        2
+      
+d.Compare both the outputs and the profiles for the two commands:      
+answer:it will take much more time when dealing with large number of the data.
+because it can not store words in uniform distribution.
+
+
+
+
+    
+e.Examine the profiles from running the command:
+
+*Note that I used the function ListLength() to work out the task1 about the prints, so if it counts, then ListLength() will be the most costly functions (in terms of overall time).
+
+answer:For N, hash table size used for the test below are 214283 400000 400837 857144 857137. Outputs shows that hash() functions will be the most costly functions (in terms of overall time).
+
+
+./mkwords 1000000 3 | ./words - 214283
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 57.67      0.92     0.92  3642822     0.00     0.00  ListLength
+ 16.39      1.18     0.26  2000004     0.00     0.00  ListSearch<<<<<<
+ 13.24      1.39     0.21  2000004     0.00     0.00  hash
+  5.67      1.48     0.09   214283     0.00     0.00  dropList
+  3.15      1.53     0.05  1000000     0.00     0.00  HashTableInsert
+  2.21      1.56     0.04  5671365     0.00     0.00  cmp
+  1.89      1.59     0.03        1    30.06   947.04  HashTableStats
+  0.00      1.59     0.00  1000004     0.00     0.00  HashTableSearch
+  0.00      1.59     0.00  1000001     0.00     0.00  ItemGet
+  0.00      1.59     0.00  1000000     0.00     0.00  newItem
+  0.00      1.59     0.00   857144     0.00     0.00  ListInsert
+  0.00      1.59     0.00   857144     0.00     0.00  dropItem
+  0.00      1.59     0.00   214283     0.00     0.00  newList
+  0.00      1.59     0.00        1     0.00    90.19  dropHashTable
+  0.00      1.59     0.00        1     0.00     0.00  newHashTable
+  
+  
+  
+./mkwords 1000000 3 | ./words - 400000 
+    %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 59.01      1.16     1.16  6800010     0.00     0.00  ListLength
+ 13.23      1.42     0.26  2000004     0.00     0.00  hash<<<<<<<<<
+ 12.72      1.67     0.25  2000004     0.00     0.00  ListSearch
+  6.61      1.80     0.13   400000     0.00     0.00  dropList
+  5.60      1.91     0.11  1000000     0.00     0.00  HashTableInsert
+  2.03      1.95     0.04        1     0.04     1.20  HashTableStats
+  0.51      1.96     0.01  1000001     0.00     0.00  ItemGet
+  0.51      1.97     0.01                             main
+  0.00      1.97     0.00  4178383     0.00     0.00  cmp
+  0.00      1.97     0.00  1000004     0.00     0.00  HashTableSearch
+  0.00      1.97     0.00  1000000     0.00     0.00  newItem
+  0.00      1.97     0.00   857144     0.00     0.00  ListInsert
+  0.00      1.97     0.00   857144     0.00     0.00  dropItem
+  0.00      1.97     0.00   400000     0.00     0.00  newList
+  0.00      1.97     0.00        1     0.00     0.13  dropHashTable
+  0.00      1.97     0.00        1     0.00     0.00  newHashTable
+
+     
+      
+./mkwords 1000000 | ./words - 400837
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 54.72      0.83     0.83  5210890     0.00     0.00  ListLength
+ 16.48      1.08     0.25  2000004     0.00     0.00  hash<<<<<<<<<
+ 13.85      1.29     0.21  2000004     0.00     0.00  ListSearch
+  6.59      1.39     0.10  1000000     0.00     0.00  HashTableInsert
+  6.59      1.49     0.10   400837     0.00     0.00  dropList
+  1.32      1.51     0.02        1    20.04   851.84  HashTableStats
+  0.66      1.52     0.01        1    10.02    10.02  newHashTable
+  0.00      1.52     0.00  4021764     0.00     0.00  cmp
+  0.00      1.52     0.00  1000004     0.00     0.00  HashTableSearch
+  0.00      1.52     0.00  1000001     0.00     0.00  ItemGet
+  0.00      1.52     0.00  1000000     0.00     0.00  newItem
+  0.00      1.52     0.00   857144     0.00     0.00  ListInsert
+  0.00      1.52     0.00   857144     0.00     0.00  dropItem
+  0.00      1.52     0.00   400837     0.00     0.00  newList
+  0.00      1.52     0.00        1     0.00   100.22  dropHashTable
+      
+      
+./mkwords 1000000 | ./words - 857137
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 49.76      0.72     0.72  8571377     0.00     0.00  ListLength
+ 17.28      0.97     0.25  2000004     0.00     0.00  hash<<<<<<<<<
+ 16.93      1.22     0.25  2000004     0.00     0.00  ListSearch
+  8.98      1.35     0.13   857137     0.00     0.00  dropList
+  2.76      1.39     0.04  1000000     0.00     0.00  HashTableInsert
+  1.38      1.41     0.02  1000001     0.00     0.00  ItemGet
+  0.69      1.42     0.01  1000000     0.00     0.00  newItem
+  0.69      1.43     0.01   857144     0.00     0.00  ListInsert
+  0.69      1.44     0.01        1    10.02   731.58  HashTableStats
+  0.69      1.45     0.01        1    10.02    10.02  newHashTable
+  0.35      1.45     0.01                             ListDelete
+  0.00      1.45     0.00  3025274     0.00     0.00  cmp
+  0.00      1.45     0.00  1000004     0.00     0.00  HashTableSearch
+  0.00      1.45     0.00   857144     0.00     0.00  dropItem
+  0.00      1.45     0.00   857137     0.00     0.00  newList
+  0.00      1.45     0.00        1     0.00   130.28  dropHashTable
+      
+      
+./mkwords 1000000 | ./words - 857144
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 54.37      0.77     0.77  9428593     0.00     0.00  ListLength
+ 13.50      0.96     0.19  2000004     0.00     0.00  hash<<<<<<<<<<<<<<<
+ 10.66      1.11     0.15  1000000     0.00     0.00  HashTableInsert
+  6.75      1.20     0.10  2000004     0.00     0.00  ListSearch
+  6.40      1.29     0.09   857144     0.00     0.00  dropList
+  3.55      1.34     0.05        1    50.11   816.76  HashTableStats
+  2.13      1.37     0.03  1000004     0.00     0.00  HashTableSearch
+  0.71      1.38     0.01  3036212     0.00     0.00  cmp
+  0.71      1.39     0.01  1000001     0.00     0.00  ItemGet
+  0.71      1.40     0.01        1    10.02   100.22  dropHashTable
+  0.71      1.41     0.01        1    10.02    10.02  newHashTable
+  0.00      1.41     0.00  1000000     0.00     0.00  newItem
+  0.00      1.41     0.00   857144     0.00     0.00  ListInsert
+  0.00      1.41     0.00   857144     0.00     0.00  dropItem
+  0.00      1.41     0.00   857144     0.00     0.00  newList
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
